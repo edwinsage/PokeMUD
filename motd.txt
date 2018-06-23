@@ -1,0 +1,1 @@
+For help, type /help and press enter.  To quit, type /quit.

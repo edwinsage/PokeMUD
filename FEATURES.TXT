@@ -1,0 +1,63 @@
+Right now, we're going with manual creation of games and players.
+
+Create a new game room, and go there.
+@newgame name
+
+Create a new player in the current game (room).
+@newplayer name = password
+
+
+
+
+Add option to allow name aliases?
+This would have to happen at object creation.
+
+
+
+
+
+
+Each game should be self-contained.  A game is defined by the
+ object number of the room it's in.  All things, pokemon, and players
+ associated with the game should have their game set to that room.  Any GM for
+ that game can work on things from that game.
+
+
+Per-game options:
+Rename own pokemon
+Set own descriptions?
+
+
+
+
+
+
+Commands should not change behavior based on privelige.
+
+
+
+Commands and abilities for each user level:
+
+Ordinary users
+
+
+
+
+
+
+
+Game Masters
+# This is the one that will really take thinking.
+Can see object numbers, full names, and flags for objects in their game.
+Can /emit.
+Can create and destroy pokemon from their game.
+Can create some number of players.
+Can @promote their players to GM status.
+Can @demote GMs to player status, if they own that player.
+
+
+
+Wizards
+Can see who /emits things.
+Manually add and remove whole games.
+

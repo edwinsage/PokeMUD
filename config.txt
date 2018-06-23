@@ -1,0 +1,134 @@
+# IMPORTANT: change these configuration settings to suit your site.
+# You may want to be much more careful about what players can do!
+# Commented values are defaults.
+
+# Port number to listen for tiny line protocol connections on
+
+#tinyp_port = 4096
+
+
+# Port number to listen for HTTP connections on
+
+#http_port = 4196
+
+
+# IP address to listen on.  If this is set to 0.0.0.0, then
+# PokeMUD will answer on all interfaces.  If it is set to a
+# specific IP address, PokeMUD will only answer on that
+# interface.  If you can set up virtual interfaces to give
+# your machine several IP addresses, then you can take
+# advantage of this to have a PokeMUD server that answers
+# HTTP requests on port 80 without interfering
+# with your regular WWW server.
+
+#ip_address = 0.0.0.0
+
+
+# The HTTP address defaults to the same as the regular
+# IP address.  You only need to set a value here if
+# they are different.
+
+#http_ip_address = 
+
+
+# What do you want to call your server?  The public sees this
+# name in the title of various web pages.
+
+#server_name = Disco
+
+
+# What is the complete ** Internet host name ** of your server?
+# This goes out with the instructions that are sent to
+# MUD users that get their accounts via email.  Examples:
+# www.boutell.com, mud.myschool.edu, et cetera.  This must
+# be a REAL host name for the server -- just putting
+# something here won't magically add a new name to your DNS!
+
+#hostname = www.CHANGEME.com
+
+
+# Should users be allowed to create objects and rooms by default?
+# Leave this as 0 if you prefer not.
+
+#allow_build = 0
+
+
+# Should users be allowed to /emit things without their
+# name prefixed?  Leave this as zero if you prefer not.
+
+#allow_emit = 0
+
+
+# Location of sendmail on your system.  This will usually be
+# correct.  This is only important if you are accepting account
+# applications from the public.
+
+#sendmail = /usr/sbin/sendmail
+
+
+# File locations for the database, the login screen banner,
+# the Message of the Day, and the help files.
+
+#db_file = pokemud.db
+#welcome_file = welcome.txt
+#motd_file = motd.txt
+#player_help_file = help.txt
+#gm_help_file = help_gm.txt
+#wizard_help_file = help_wiz.txt
+#email_file = mail.txt
+#homepage_file = home.html
+#application_file = application.html
+#accepted_file = accepted.html
+#mail_aliases_file = aliases.txt
+#apache_passwords_file = apache.passwords.txt
+#update_mail_aliases_command = ./updatealiases
+
+
+# If you uncomment this, set a password
+
+#news_password = 
+
+
+# Idle timeout.  This hangs up on users if they do not
+# enter at least one command in the time interval
+# (specified in seconds; 3600 is an hour).
+
+#idle_timeout = 86400
+
+
+# Idle timeout for HTTP connections, in seconds.  This is
+# different: if the server doesn't at least hear from
+# the user's web browser, requesting more mud output,
+# in this interval, the user is disconnected.
+#
+# Since users frequently do not formally log out and there is
+# no real "connection," this timeout should be fairly short (10 minutes).
+
+#http_idle_timeout = 600
+
+
+# Time to wait between (brief) attempts at closing
+# sockets we don't need anymore.  The longer this is,
+# the fewer pauses the mud will experience.
+
+#fd_closure_interval = 30
+
+
+# Rows of text to keep from one http update to the next.
+
+#http_rows = 40
+
+
+# Columns of text, with auto word wrap inside a <PRE> tag.
+
+#http_cols = 70
+
+
+# Seconds between HTTP client pulls (in browsers that support pull).
+
+#http_refresh_time = 30
+
+
+# Interval between automatic backups of the database, in seconds (1 hour).
+
+#dump_interval = 3600

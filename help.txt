@@ -1,0 +1,90 @@
+*index
+PokeMUD Help System
+Type "/help topic" for more information about a
+particular command or topic.
+List of available commands:
+help, look, say, sayto, ooc, emote, whisper, 
+welcome, motd, quit
+
+*help
+The help system you are now using.  Type "/help" by itself
+and press ENTER for a list of commands and help topics.
+
+Usage:
+
+/help
+/help [topic]
+*look
+The look command is used to glance at the current room,
+or at a particular object.
+
+Usage:
+
+look
+look me
+look north
+*say
+The /say command is used to speak in character to other
+players in the room.  Its counterpart is the /ooc
+command, used for speaking out of character.  Player
+speech defaults to OOC unless you switch it with the
+/toggle command.
+
+Usage: 
+
+say Hi there!
+"Hi there!
+*sayto
+The /sayto command lets you address your speech to a
+specific player, or players.  Everyone in the room will
+still see it.
+
+Usage:
+
+/sayto Bill = What a nice day!
+/sayto Wormwell,Cribbage = G'day, boys.
+*ooc
+The /ooc command lets you speak out of character, which is
+useful if your game is roleplay-oriented.  It is the
+default speech method, unless you /toggle speech.  It can
+be abbreviated by starting a line with an underscore.
+
+Usage:
+
+/ooc brb sandwich
+_brb sandwich
+*emote
+The /emote command is used to express yourself in the third
+person.  The resulting sentence will begin with your name.
+
+Usage:
+
+/emote smiles.
+:smiles.
+:'s arm falls off.
+*whisper
+The whisper command is used to speak privately to
+one or more individuals.  The . command is a shorthand
+for whisper.  If the individual is in the same room,
+you can abbreviate the name.
+
+Usage:
+
+whisper person,person,person = message
+.person,person message
+*welcome
+The /welcome command repeats the message that was displayed
+when you first connected to the MUD.
+
+Usage:
+
+/welcome
+*motd
+The /motd command repeats the message that was displayed
+immediately after you logged into the MUD.
+
+Usage:
+
+/motd
+*rules
+NO RULEZ!

@@ -1,0 +1,3 @@
+Pokemon Tabletop Adventures Game Server - Login
+Type "connect name password" to log in.
+

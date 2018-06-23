@@ -1,0 +1,41 @@
+*index
+
+Additional wizard-only commands:
+
+@wall, @games, @newgame, @teleport
+
+*@wall
+The @wall command is used to send a message to
+all players currently connected to the MUD.
+
+Usage:
+
+@wall System restarting in 5 minutes
+*@games
+This lists all of the game rooms currently in use.  It can
+be used to display a list of all rooms that exist, if
+given the argument "all".
+
+Usage:
+
+@games
+@games all
+*@newgame
+This command initializes a new game, and moves the creator
+to it.
+
+Usage:
+
+@newgame Quest to be the Best
+*@teleport
+The @teleport command is used to transport an object,
+or your character, to a specific location.  If the word
+home is used as a destination, the object will go
+to its own home, as was set by the @link command.
+
+Usage:
+
+@teleport #0
+@teleport dog = home
+*rules
+Noe rewls.

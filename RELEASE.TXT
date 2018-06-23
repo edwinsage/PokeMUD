@@ -1,0 +1,2 @@
+Version 0.1, 2015-06-12:  Hey, it's a thing!  HTTP and telnet connections
+ connect, and pretty much nothing else.  This is where we start from.

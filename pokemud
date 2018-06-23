@@ -1,0 +1,223 @@
+#!/usr/bin/perl
+
+# PokeMUD 0.1.something
+# Based off code from PerlMUD; original license below.
+#
+# All changes, modifications, and new code
+# copyright (c) 2015 Michael Pirkola
+#
+#
+# Released under the GNU AGPL License Version 3
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as published
+#    by the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+#
+# PerlMud license information:
+#
+##PerlMUD 3.0, by Boutell.Com, Inc.
+##
+##PERL 5 REQUIRED. Your platform must also support Internet sockets.
+##
+##SEE CONFIGURATION SETTINGS in mudlib.pl.
+##
+##RELEASED UNDER THE MIT LICENSE.
+##Copyright (c) 2011 Boutell.Com, Inc.
+##
+##Permission is hereby granted, free of charge, to any person obtaining a 
+##copy of this software and associated documentation files (the "Software"), 
+##to deal in the Software without restriction, including without limitation 
+##the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+##and/or sell copies of the Software, and to permit persons to whom the 
+##Software is furnished to do so, subject to the following conditions:
+##
+##The above copyright notice and this permission notice shall be included 
+##in all copies or substantial portions of the Software.
+##
+##THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+##OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+##FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+##THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR 
+##OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
+##ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR 
+##OTHER DEALINGS IN THE SOFTWARE.
+##
+##CONTACT INFORMATION:
+##
+##http://www.boutell.com/perlmud/
+#
+#
+#
+### end license block ###
+
+
+# The directory where PokeMUD can expect to find all of its data files,
+# and the pokemudlib.pl file.  All other settings and all non-initialization
+# code are in pokemudlib.pl.  This allows the @reload command to be used to
+# install new code on the fly (of course, there is still a good chance
+# of crashing the mud if the new code is buggy, but it can sometimes
+# avoid the need for a restart).
+
+#!# Change to perl location of currently running program.
+$dataDirectory = "";
+$configFile = "PokeMUD.conf";
+
+#!# Make script accept arguments for where to find datadir and config.
+
+
+
+
+#my %cfg;
+require "$dataDirectory/pokemudlib.pl";
+
+require 5.001;
+use Fcntl;
+use Socket;
+use POSIX;
+use Safe;
+
+
+if (!chdir($dataDirectory))  {
+	print "The MUD server could not change to the \n",
+		"working directory: $dataDirectory \n",
+		"Please read the documentation and follow\n",
+		"all of the instructions carefully.\n";
+	exit 0;
+	}
+
+if ($cfg{"hostname"} =~ /CHANGEME/) {
+	print "The hostname configuration variable has not been set.\n",
+		"This configuration variable must be set to the Internet\n",
+		"host name of your server so users can be told how to\n",
+		"connect.  Please read the documentation and follow all of\n",
+		"the instructions carefully.\n";
+	exit 0;
+	}
+
+
+# Start time
+$now = time;
+
+# Set seed for RNG.
+srand($now + $$);
+
+$initialized = $now;
+$lastdump = $now;
+$lastFdClosure = $now;
+
+# Load database
+if (!&restore)  {
+	print "Can't start the mud with this database.\n";
+	exit 0;
+	}
+
+# Name first file descriptor
+$fdBase = "FD";
+$fdNum = 0;
+
+# Set up listener socket
+# Thanks, PerlMUD.  I don't even know how this works.
+# But you've done it for me.
+$sockaddr = 'S n a4 x8';
+($name, $aliases, $proto) = getprotobyname("tcp");
+
+
+# First for telnet connections.
+@addr = split(/\./, $cfg{"ip_address"});
+$this = pack($sockaddr, AF_INET, $cfg{"tinyp_port"}, pack("CCCC", @addr));
+
+if (!socket(TINYP_LISTENER, AF_INET, SOCK_STREAM, $proto))  {
+	print "Couldn't create tinyp listener socket.\n";
+	print "This Perl implementation probably does not support sockets.\n";
+	exit 1;
+	}
+
+# Make sure we can reuse this quickly after a shutdown
+setsockopt(TINYP_LISTENER, SOL_SOCKET, SO_REUSEADDR, $this);
+
+# Always set linger; we'll make many brief attempts to
+# close the socket to avoid responsiveness problems
+setsockopt(TINYP_LISTENER, SOL_SOCKET, SO_LINGER, 1);
+
+# Get the port
+if (!bind(TINYP_LISTENER, $this))  {
+	print "Couldn't bind to port ", $cfg{"tinyp_port"}, ".\n";
+	close(TINYP_LISTENER);
+	exit 1;
+	}
+
+fcntl(TINYP_LISTENER, F_SETFL, O_NONBLOCK);
+
+if (!listen(TINYP_LISTENER, 5))  {
+	print "Couldn't initiate listening for tinyp connections.\n";
+	close(TINYP_LISTENER);
+	exit 1;
+	}
+
+
+# Then for http connections
+@addr = split(/\./, $cfg{"http_ip_address"}); 
+$this = pack($sockaddr, AF_INET, $cfg{"http_port"}, pack("CCCC", @addr));
+
+if (!socket(HTTP_LISTENER, AF_INET, SOCK_STREAM, $proto))  {
+	print "Couldn't create http listener socket.\n";
+	print "This Perl implementation probably does not support sockets.\n";
+	exit 1;
+	}
+
+# Make sure we can reuse this quickly after a shutdown
+setsockopt(HTTP_LISTENER, SOL_SOCKET, SO_REUSEADDR, $this);
+
+# Always set linger; we'll make many brief attempts to
+# close the socket to avoid responsiveness problems
+setsockopt(TINYP_LISTENER, SOL_SOCKET, SO_LINGER, 1);  # Not sure why this is TINYP
+
+# Get the port
+if (!bind(HTTP_LISTENER, $this))  {
+	print "Couldn't bind to port ", $cfg{"http_port"}, ".\n";
+	close(HTTP_LISTENER);
+	exit 1;
+	}
+
+fcntl(HTTP_LISTENER, F_SETFL, O_NONBLOCK);
+
+if (!listen(HTTP_LISTENER, 5))  {
+	print "Couldn't initiate listening for http connections.\n";
+	close(HTTP_LISTENER);
+	exit 1;
+	}
+
+# This is the MUD, basically.
+until ($theCowsComeHome)  {  # A.K.A., while (1)
+	# Select loop
+	&selectPass;
+	if ($reloadFlag)  {
+		my($file) = "$dataDirectory/pokemudlib.pl";
+		my($return);
+		$return = do $file;
+		if ($return)  {
+			&tellWizards(chr(27) . '[31m' . "Reloaded $file successfully." . chr(27) . '[0m');
+			}
+		else  {
+			# Hopefully the programmer didn't break tellWizards!
+			&tellWizards(chr(27) . '[31m' . chr(27) . '[1m' .
+					"Couldn't parse $file: $@" . chr(27) . '[0m') if $@;
+			&tellWizards(chr(27) . '[31m' . chr(27) . '[1m' .
+					"Couldn't do $file: $!" . chr(27) . '[0m') unless
+				defined $return;
+			&tellWizards(chr(27) . '[31m' . chr(27) . '[1m' .
+					"Couldn't run $file" . chr(27) . '[0m') unless $return;
+			}
+		$reloadFlag = 0;
+		}
+	}

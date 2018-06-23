@@ -1,0 +1,48 @@
+*index
+
+Additional GM commands:
+
+examine, @create, @recycle, @newplayer
+
+*examine
+The examine command is used to examine a particular
+object in detail.  The examine command outputs a great
+deal of useful information including flag settings,
+object numbers, and other information about the object.
+
+Usage:
+
+/examine
+/examine me
+/examine #12
+*@create
+The @create command is used to create a new object.
+These objects function mainly as props.  If enabled
+on your server, synonyms can be added by placing them
+after semicolons in the name.
+
+Usage:
+
+@create Nurse Joy
+@create pile of rocks;rocks;pile
+*@recycle
+The @recycle command is used to recycle (destroy) an
+object or pokemon, reclaiming the space to be reused
+by a new object.  If the object is a container, its
+contents are immediately dropped.
+
+@recycle cannot be undone. Be sure you want to recycle 
+the object.  This command cannot be abbreviated.
+
+Usage:
+
+@recycle object
+*@newplayer
+This command creates a new player for the current game,
+and sets their password.
+
+Usage:
+
+@newplayer Bill = notarattata
+*rules
+kno rhursh
